@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Système d'Alternatives — Miroir</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0a0f;
+      color: #e0e0e0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* ─── SLIDE WRAPPER ─── */
+    .slide {
+      width: 960px;
+      min-height: 540px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 36px;
+      padding: 48px 40px;
+    }
+
+    /* ─── TITLE ─── */
+    .title {
+      text-align: center;
+    }
+    .title h1 {
+      font-size: 1.5rem;
+      font-weight: 300;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #888;
+    }
+    .title h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #a78bfa, #60a5fa, #34d399);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 4px;
+    }
+
+    /* ─── MAIN DIAGRAM ─── */
+    .diagram {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      width: 100%;
+      justify-content: center;
+    }
+
+    /* ─── COLUMN ─── */
+    .col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .col-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 4px;
+    }
+
+    /* ─── OBJECTIVE STACK ─── */
+    .obj-stack {
+      position: relative;
+      width: 130px;
+    }
+    .obj-card {
+      width: 130px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      text-align: center;
+      border: 1px solid;
+      position: relative;
+      z-index: 3;
+      backdrop-filter: blur(4px);
+    }
+    /* Stacked ghost cards for infinity effect */
+    .obj-card::before,
+    .obj-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      border: 1px solid;
+    }
+    .obj-card::before {
+      transform: translate(4px, 4px);
+      z-index: -1;
+      opacity: 0.4;
+    }
+    .obj-card::after {
+      transform: translate(8px, 8px);
+      z-index: -2;
+      opacity: 0.2;
+    }
+
+    /* Pastel color themes */
+    .c-violet { background: rgba(139,92,246,0.12); border-color: #7c3aed; color: #c4b5fd; }
+    .c-violet::before, .c-violet::after { border-color: #7c3aed; background: rgba(139,92,246,0.06); }
+
+    .c-blue   { background: rgba(59,130,246,0.12);  border-color: #2563eb; color: #93c5fd; }
+    .c-blue::before, .c-blue::after { border-color: #2563eb; background: rgba(59,130,246,0.06); }
+
+    .c-green  { background: rgba(52,211,153,0.12);  border-color: #059669; color: #6ee7b7; }
+    .c-green::before, .c-green::after { border-color: #059669; background: rgba(52,211,153,0.06); }
+
+    .infinity-tag {
+      margin-top: 10px;
+      font-size: 0.7rem;
+      color: #444;
+      text-align: center;
+      letter-spacing: 0.08em;
+    }
+    .infinity-tag span {
+      font-size: 1.1rem;
+      color: #666;
+    }
+
+    /* ─── ARROW ─── */
+    .arrow-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 80px;
+      padding-top: 24px;
+    }
+    .arrow-line {
+      height: 2px;
+      width: 100%;
+      background: linear-gradient(90deg, transparent, #333, #555, #333, transparent);
+      position: relative;
+    }
+    .arrow-tip {
+      font-size: 1rem;
+      color: #555;
+      margin-left: 2px;
+    }
+    .or-badge {
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      color: #666;
+      background: #1a1a2e;
+      border: 1px solid #333;
+      border-radius: 99px;
+      padding: 2px 8px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* ─── AI ENGINE ─── */
+    .ai-box {
+      width: 160px;
+      padding: 20px 14px;
+      border-radius: 20px;
+      border: 1px solid #2a2a3e;
+      background: radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.15), rgba(0,0,0,0) 70%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      text-align: center;
+      box-shadow: 0 0 40px rgba(99,102,241,0.08);
+      margin-top: 24px;
+    }
+    .ai-icon {
+      font-size: 2rem;
+      filter: drop-shadow(0 0 8px rgba(139,92,246,0.6));
+    }
+    .ai-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: #6366f1;
+      font-weight: 600;
+    }
+    .ai-desc {
+      font-size: 0.62rem;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    /* ─── OUTPUT ALTERNATIVES ─── */
+    .output-col {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 24px;
+    }
+    .alt-card {
+      width: 180px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.72rem;
+      line-height: 1.4;
+      border-left: 3px solid;
+      background: rgba(255,255,255,0.03);
+      position: relative;
+      overflow: hidden;
+    }
+    .alt-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, currentColor, transparent);
+      opacity: 0.04;
+    }
+    .alt-card .tag {
+      font-size: 0.58rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      opacity: 0.6;
+      margin-bottom: 3px;
+    }
+    .alt-card .alt-text {
+      font-weight: 500;
+      color: #ccc;
+    }
+
+    .a1 { border-color: #a78bfa; color: #a78bfa; }
+    .a2 { border-color: #60a5fa; color: #60a5fa; }
+    .a3 { border-color: #34d399; color: #34d399; }
+
+    /* ─── FOOTNOTE ─── */
+    .footnote {
+      font-size: 0.68rem;
+      color: #333;
+      text-align: center;
+      letter-spacing: 0.08em;
+      border-top: 1px solid #1a1a1a;
+      padding-top: 16px;
+      width: 100%;
+      max-width: 700px;
+    }
+    .footnote strong { color: #555; }
+
+    /* ─── PULSE ANIMATION ─── */
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(99,102,241,0.08); }
+      50%       { box-shadow: 0 0 50px rgba(99,102,241,0.22); }
+    }
+    .ai-box { animation: pulse-glow 3s ease-in-out infinite; }
+
+    @keyframes float-in {
+      from { opacity: 0; transform: translateX(12px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    .alt-card:nth-child(1) { animation: float-in 0.5s 0.2s both; }
+    .alt-card:nth-child(2) { animation: float-in 0.5s 0.5s both; }
+    .alt-card:nth-child(3) { animation: float-in 0.5s 0.8s both; }
+  </style>
+</head>
+<body>
+<div class="slide">
+
+  <!-- TITLE -->
+  <div class="title">
+    <h1>Comment fonctionne</h1>
+    <h2>le Système d'Alternatives</h2>
+  </div>
+
+  <!-- DIAGRAM -->
+  <div class="diagram">
+
+    <!-- COL 1 : OBJECTIFS PERSONNALISÉS -->
+    <div class="col">
+      <div class="col-label">Objectifs personnalisés</div>
+
+      <div class="obj-stack">
+        <div class="obj-card c-violet">🌍 Road trip en van</div>
+        <div class="infinity-tag"><span>∞</span> variantes Voyage</div>
+      </div>
+
+      <div class="obj-stack" style="margin-top:8px">
+        <div class="obj-card c-green">🌱 Zéro déchet chez moi</div>
+        <div class="infinity-tag"><span>∞</span> variantes Écologie</div>
+      </div>
+
+      <div class="obj-stack" style="margin-top:8px">
+        <div class="obj-card c-blue">💰 Épargner 500€/mois</div>
+        <div class="infinity-tag"><span>∞</span> variantes Épargne</div>
+      </div>
+    </div>
+
+    <!-- ARROW 1 : 1 ou 2 objectifs -->
+    <div class="arrow-col">
+      <div style="font-size:0.6rem;color:#444;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px">sélection</div>
+      <div class="or-badge">1 objectif</div>
+      <div style="width:2px;height:18px;background:#222;margin:2px auto"></div>
+      <div class="or-badge">ou 2 objectifs</div>
+      <div style="display:flex;align-items:center;margin-top:6px">
+        <div class="arrow-line" style="width:40px"></div>
+        <div class="arrow-tip">▶</div>
+      </div>
+    </div>
+
+    <!-- AI ENGINE -->
+    <div class="ai-box">
+      <div class="ai-icon">✦</div>
+      <div class="ai-label">IA Miroir</div>
+      <div class="ai-desc">Analyse la combinaison<br>& génère des alternatives<br>adaptées au profil</div>
+    </div>
+
+    <!-- ARROW 2 -->
+    <div class="arrow-col">
+      <div style="display:flex;align-items:center;margin-top:0">
+        <div class="arrow-line" style="width:40px"></div>
+        <div class="arrow-tip">▶</div>
+      </div>
+      <div style="font-size:0.58rem;color:#444;margin-top:6px;text-align:center;letter-spacing:0.08em;text-transform:uppercase">résultat</div>
+    </div>
+
+    <!-- OUTPUT ALTERNATIVES -->
+    <div class="col">
+      <div class="col-label">Alternatives proposées</div>
+      <div class="output-col">
+        <div class="alt-card a1">
+          <div class="tag">Option A · Équilibre</div>
+          <div class="alt-text">Road trip + épargne progressive en route</div>
+        </div>
+        <div class="alt-card a2">
+          <div class="tag">Option B · Priorité voyage</div>
+          <div class="alt-text">Partir maintenant, budget serré optimisé</div>
+        </div>
+        <div class="alt-card a3">
+          <div class="tag">Option C · Préparation</div>
+          <div class="alt-text">Épargner 6 mois, partir pleinement libre</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTNOTE -->
+  <div class="footnote">
+    <strong>8 catégories de base</strong> · personnalisées par passions &amp; précisions → <strong>∞ objectifs possibles</strong> · combinés par <strong>1 ou 2</strong> → alternatives sur-mesure
+  </div>
+
+</div>
+</body>
+</html>
